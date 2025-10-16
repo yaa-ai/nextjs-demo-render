@@ -1,4 +1,4 @@
-name: Deploy to Render
+name: Deploy to Supabase and Render
 
 on:
   push:
@@ -11,8 +11,24 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       deployments: write
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+      SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+
     steps:
-      - uses: JorgeLNJunior/render-deploy@v1.4.6
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+      - run: supabase link --project-ref $SUPABASE_PROJECT_ID
+      - run: supabase db push
+
+      - name: Deploy to Render
+        uses: JorgeLNJunior/render-deploy@v1.4.6
         with:
           service_id: ${{ secrets.RENDER_SERVICE_ID }}
           api_key: ${{ secrets.RENDER_API_KEY }}
