@@ -24,6 +24,7 @@ export default function TodoWidget() {
       const { data, error } = await supabase
         .from('todos')
         .select('*')
+        .order('priority', { ascending: false })
         .order('created_at', { ascending: false })
 
       if (error) throw error
@@ -37,13 +38,41 @@ export default function TodoWidget() {
   }
 
   const handleAdd = (newTodo: Todo) => {
-    setTodos(prev => [newTodo, ...prev])
+    setTodos(prev => {
+      const updated = [newTodo, ...prev]
+      // Sort by priority (high to low) then by created_at (newest first)
+      return updated.sort((a, b) => {
+        const priorityOrder = { high: 3, medium: 2, low: 1 }
+        const aPriority = priorityOrder[a.priority]
+        const bPriority = priorityOrder[b.priority]
+        
+        if (aPriority !== bPriority) {
+          return bPriority - aPriority
+        }
+        
+        return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      })
+    })
   }
 
   const handleUpdate = (updatedTodo: Todo) => {
-    setTodos(prev => prev.map(todo => 
-      todo.id === updatedTodo.id ? updatedTodo : todo
-    ))
+    setTodos(prev => {
+      const updated = prev.map(todo => 
+        todo.id === updatedTodo.id ? updatedTodo : todo
+      )
+      // Re-sort when priority is updated
+      return updated.sort((a, b) => {
+        const priorityOrder = { high: 3, medium: 2, low: 1 }
+        const aPriority = priorityOrder[a.priority]
+        const bPriority = priorityOrder[b.priority]
+        
+        if (aPriority !== bPriority) {
+          return bPriority - aPriority
+        }
+        
+        return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      })
+    })
   }
 
   const handleDelete = (id: string) => {

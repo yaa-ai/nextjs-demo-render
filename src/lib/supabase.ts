@@ -14,6 +14,7 @@ export type Todo = {
   id: string
   text: string
   completed: boolean
+  priority: 'low' | 'medium' | 'high'
   created_at: string
   updated_at: string
 }
