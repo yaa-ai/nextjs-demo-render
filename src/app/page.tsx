@@ -22,6 +22,10 @@ export default function Home() {
           <div className="w-3 h-3 bg-purple-500 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
           <div className="w-3 h-3 bg-pink-500 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
         </div>
+        
+        <div className="text-sm text-gray-500 dark:text-gray-400 font-mono">
+          RENDER_DEMO_VARIABLE = {process.env.RENDER_DEMO_VARIABLE || 'Not set'}
+        </div>
       </div>
     </div>
   );
