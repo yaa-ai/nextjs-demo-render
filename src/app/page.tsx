@@ -12,7 +12,7 @@ export default function Home() {
                 Hello World
               </h1>
               <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 max-w-2xl">
-                A demo by Prakash Manandhar from yaa.ai
+                A demo by Prakash Manandhar (prakash at yaa.ai)
               </p>
             </div>
             
